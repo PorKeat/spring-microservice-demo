@@ -4,6 +4,7 @@ WORKDIR /app
 COPY build.gradle ./
 COPY settings.gradle ./
 COPY src ./src
+COPY config-repo ./config-repo
 
 RUN gradle build --no-daemon -x test
 

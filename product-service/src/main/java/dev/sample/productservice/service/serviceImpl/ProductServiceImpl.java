@@ -1,5 +1,7 @@
 package dev.sample.productservice.service.serviceImpl;
 
+import dev.sample.productservice.client.CategoryServiceClient;
+import dev.sample.productservice.dto.CategorySummary;
 import dev.sample.productservice.dto.ProductRequest;
 import dev.sample.productservice.dto.ProductResponse;
 import dev.sample.productservice.exception.DuplicateResourceException;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryServiceClient categoryServiceClient;
 
     // ── CREATE ────────────────────────────────────────────────────────────────
 
@@ -30,12 +33,14 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse createProduct(ProductRequest request) {
         log.info("Creating product with name: {}", request.getName());
 
+        CategorySummary category = categoryServiceClient.getRequiredActiveCategory(request.getCategoryId());
+
         if (productRepository.existsByNameIgnoreCase(request.getName())) {
             throw new DuplicateResourceException(
                     "Product with name '" + request.getName() + "' already exists");
         }
 
-        Product product = mapToEntity(request);
+        Product product = mapToEntity(request, category);
         Product saved = productRepository.save(product);
 
         log.info("Product created successfully with id: {}", saved.getId());
@@ -74,6 +79,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<ProductResponse> getProductsByCategoryId(Long categoryId) {
+        log.info("Fetching products by category id: {}", categoryId);
+        return productRepository.findByCategoryId(categoryId)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<ProductResponse> searchProductsByName(String name) {
         log.info("Searching products by name: {}", name);
         return productRepository.findByNameContainingIgnoreCase(name)
@@ -102,6 +117,13 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<CategorySummary> getActiveCategories() {
+        log.info("Fetching active categories through category-service");
+        return categoryServiceClient.getActiveCategories();
+    }
+
     // ── UPDATE ────────────────────────────────────────────────────────────────
 
     @Override
@@ -109,6 +131,8 @@ public class ProductServiceImpl implements ProductService {
         log.info("Updating product with id: {}", id);
 
         Product existing = findOrThrow(id);
+
+        CategorySummary category = categoryServiceClient.getRequiredActiveCategory(request.getCategoryId());
 
         // Check duplicate name only if name actually changed
         if (!existing.getName().equalsIgnoreCase(request.getName())
@@ -121,7 +145,8 @@ public class ProductServiceImpl implements ProductService {
         existing.setDescription(request.getDescription());
         existing.setPrice(request.getPrice());
         existing.setStock(request.getStock());
-        existing.setCategory(request.getCategory());
+        existing.setCategoryId(category.getId());
+        existing.setCategory(category.getName());
 
         Product updated = productRepository.save(existing);
         log.info("Product updated successfully with id: {}", updated.getId());
@@ -146,24 +171,31 @@ public class ProductServiceImpl implements ProductService {
                         "Product not found with id: " + id));
     }
 
-    private Product mapToEntity(ProductRequest request) {
+    private Product mapToEntity(ProductRequest request, CategorySummary category) {
         return Product.builder()
                 .name(request.getName())
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .stock(request.getStock())
-                .category(request.getCategory())
+                .categoryId(category.getId())
+                .category(category.getName())
                 .build();
     }
 
     private ProductResponse mapToResponse(Product product) {
+        CategorySummary categoryDetails = product.getCategoryId() == null
+                ? null
+                : categoryServiceClient.getCategoryById(product.getCategoryId());
+
         return ProductResponse.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .stock(product.getStock())
-                .category(product.getCategory())
+                .categoryId(product.getCategoryId())
+                .categoryName(product.getCategory())
+                .category(categoryDetails)
                 .createdAt(product.getCreatedAt())
                 .updatedAt(product.getUpdatedAt())
                 .build();

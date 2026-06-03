@@ -16,7 +16,9 @@ public class ProductResponse {
     private String description;
     private BigDecimal price;
     private Integer stock;
-    private String category;
+    private Long categoryId;
+    private String categoryName;
+    private CategorySummary category;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

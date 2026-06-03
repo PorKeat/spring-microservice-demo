@@ -6,10 +6,12 @@ spring:
   cloud:
     config:
       server:
-          native:
-            search-locations:
-              - classpath:/config-repo/
-              - classpath:/config-repo/{application}/
+        native:
+          search-locations:
+            - file:./config-server/config-repo/
+            - file:./config-server/config-repo/{application}/
+            - classpath:/config-repo/
+            - classpath:/config-repo/{application}/
 
 server:
   port: ${SERVER_PORT:8888}

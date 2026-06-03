@@ -1,6 +1,6 @@
-package dev.sample.productservice.exception;
+package dev.sample.categoryservice.exception;
 
-import dev.sample.productservice.dto.ApiResponse;
+import dev.sample.categoryservice.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +29,6 @@ public class GlobalExceptionHandler {
         log.error("Duplicate resource: {}", ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
-                .body(ApiResponse.error(ex.getMessage()));
-    }
-
-    @ExceptionHandler(InvalidCategoryException.class)
-    public ResponseEntity<ApiResponse<Void>> handleInvalidCategory(InvalidCategoryException ex) {
-        log.error("Invalid category: {}", ex.getMessage());
-        return ResponseEntity
-                .status(ex.getStatus())
                 .body(ApiResponse.error(ex.getMessage()));
     }
 

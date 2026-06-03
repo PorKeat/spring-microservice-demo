@@ -27,6 +27,6 @@ public class ProductRequest {
     @Min(value = 0, message = "Stock cannot be negative")
     private Integer stock;
 
-    @NotBlank(message = "Category is required")
-    private String category;
+    @NotNull(message = "Category id is required")
+    private Long categoryId;
 }

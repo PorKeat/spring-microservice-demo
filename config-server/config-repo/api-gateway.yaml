@@ -25,6 +25,24 @@ spring:
               uri: lb://product-service
               predicates:
                 - Path=/product/v3/api-docs
+            - id: category-service
+              uri: lb://category-service
+              predicates:
+                - Path=/api/v1/categories/**
+              filters:
+                - StripPrefix=0
+            - id: category-service-swagger-ui
+              uri: lb://category-service
+              predicates:
+                - Path=/category/swagger-ui/**,/category/swagger-ui.html,/category/swagger-ui/index.html
+            - id: category-service-openapi
+              uri: lb://category-service
+              predicates:
+                - Path=/category/v3/api-docs/**
+            - id: category-service-openapi-root
+              uri: lb://category-service
+              predicates:
+                - Path=/category/v3/api-docs
 
 springdoc:
   api-docs:
@@ -36,3 +54,5 @@ springdoc:
     urls:
       - name: product-service
         url: /product/v3/api-docs
+      - name: category-service
+        url: /category/v3/api-docs

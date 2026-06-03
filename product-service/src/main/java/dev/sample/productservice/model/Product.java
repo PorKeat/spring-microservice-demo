@@ -38,7 +38,9 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
-    @NotBlank(message = "Category is required")
+    @Column(name = "category_id")
+    private Long categoryId;
+
     @Column(nullable = false)
     private String category;
 

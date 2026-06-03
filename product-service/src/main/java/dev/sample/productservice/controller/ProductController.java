@@ -3,6 +3,7 @@ package dev.sample.productservice.controller;
 
 import dev.sample.productservice.dto.ProductRequest;
 import dev.sample.productservice.dto.ProductResponse;
+import dev.sample.productservice.dto.CategorySummary;
 import dev.sample.productservice.dto.ApiResponse;
 import dev.sample.productservice.service.ProductService;
 import jakarta.validation.Valid;
@@ -75,6 +76,23 @@ public class ProductController {
         List<ProductResponse> products = productService.getProductsByCategory(category);
         return ResponseEntity.ok(
                 ApiResponse.success("Products fetched by category", products));
+    }
+
+    @GetMapping("/category-id/{categoryId}")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getByCategoryId(
+            @PathVariable Long categoryId) {
+        log.info("GET /api/v1/products/category-id/{} - Fetching by category id", categoryId);
+        List<ProductResponse> products = productService.getProductsByCategoryId(categoryId);
+        return ResponseEntity.ok(
+                ApiResponse.success("Products fetched by category id", products));
+    }
+
+    @GetMapping("/categories/active")
+    public ResponseEntity<ApiResponse<List<CategorySummary>>> getActiveCategories() {
+        log.info("GET /api/v1/products/categories/active - Fetching active categories from category-service");
+        List<CategorySummary> categories = productService.getActiveCategories();
+        return ResponseEntity.ok(
+                ApiResponse.success("Active categories fetched successfully", categories));
     }
 
     @GetMapping("/search")

@@ -42,6 +42,7 @@ dependencies {
 
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
 
     // H2 In-Memory Database (swap with MySQL/PostgreSQL for production)
     runtimeOnly 'com.h2database:h2'

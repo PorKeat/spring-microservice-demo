@@ -1,5 +1,6 @@
 package dev.sample.productservice.service;
 
+import dev.sample.productservice.dto.CategorySummary;
 import dev.sample.productservice.dto.ProductRequest;
 import dev.sample.productservice.dto.ProductResponse;
 
@@ -20,9 +21,13 @@ public interface ProductService {
 
     List<ProductResponse> getProductsByCategory(String category);
 
+    List<ProductResponse> getProductsByCategoryId(Long categoryId);
+
     List<ProductResponse> searchProductsByName(String name);
 
     List<ProductResponse> getProductsByPriceRange(BigDecimal min, BigDecimal max);
 
     List<ProductResponse> getInStockProducts();
+
+    List<CategorySummary> getActiveCategories();
 }

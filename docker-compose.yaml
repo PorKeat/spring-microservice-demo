@@ -76,6 +76,33 @@ services:
       timeout: 5s
       retries: 12
 
+  category-service:
+    build:
+      context: ./category-service
+    container_name: category-service-cont
+    environment:
+      CONFIG_SERVER_URL: http://config-server:8888
+      EUREKA_SERVER_URL: http://eureka-server:8761/eureka
+      SERVER_PORT: 8484
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/productdb
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: secret123
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8484:8484"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8484/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
   api-gateway:
     build:
       context: ./api-gateway
@@ -91,6 +118,8 @@ services:
       eureka-server:
         condition: service_healthy
       product-service:
+        condition: service_healthy
+      category-service:
         condition: service_healthy
     ports:
       - "8282:8282"

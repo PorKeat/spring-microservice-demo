@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5434/mydb}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://db-mypostgres-pg-7a61e140.db.autonomous-istad.com:15434/mydb?sslmode=require}
     username: ${SPRING_DATASOURCE_USERNAME:admin}
     password: ${SPRING_DATASOURCE_PASSWORD:secret123}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.postgresql.Driver}
@@ -27,3 +27,7 @@ springdoc:
     path: /product/swagger-ui.html
   api-docs:
     path: /product/v3/api-docs
+
+app:
+  cors:
+    allowed-origin-patterns: ${APP_CORS_ALLOWED_ORIGIN_PATTERNS:*}

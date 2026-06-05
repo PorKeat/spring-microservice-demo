@@ -8,7 +8,7 @@ This workspace is prepared as a Spring Cloud microservice stack with the service
 - `category-service`
 - `api-gateway`
 
-<img src="./Service-depend_on.png" alt="Service_depend_on" />
+<img src="./Service-depend_on-V2.png" alt="Service_depend_on" />
 
 ### Dependencies
 

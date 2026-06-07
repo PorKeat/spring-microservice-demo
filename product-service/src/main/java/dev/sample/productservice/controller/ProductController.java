@@ -1,6 +1,5 @@
 package dev.sample.productservice.controller;
 
-
 import dev.sample.productservice.dto.ProductRequest;
 import dev.sample.productservice.dto.ProductResponse;
 import dev.sample.productservice.dto.CategorySummary;

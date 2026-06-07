@@ -153,6 +153,16 @@ public class ProductServiceImpl implements ProductService {
         return mapToResponse(updated);
     }
 
+    // ── DELETE ────────────────────────────────────────────────────────────────
+
+    @Override
+    public void deleteProduct(Long id) {
+        log.info("Deleting product with id: {}", id);
+        Product product = findOrThrow(id);
+        productRepository.delete(product);
+        log.info("Product deleted successfully with id: {}", id);
+    }
+
     // ── HELPERS ───────────────────────────────────────────────────────────────
 
     private Product findOrThrow(Long id) {

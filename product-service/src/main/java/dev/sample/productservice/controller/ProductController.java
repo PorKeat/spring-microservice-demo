@@ -61,13 +61,13 @@ public class ProductController {
                 ApiResponse.success("Product updated successfully", updated));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long id) {
-        log.info("DELETE /api/v1/products/{} - Deleting product", id);
-        productService.deleteProduct(id);
-        return ResponseEntity.ok(
-                ApiResponse.success("Product deleted successfully", null));
-    }
+//     @DeleteMapping("/{id}")
+//     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long id) {
+//         log.info("DELETE /api/v1/products/{} - Deleting product", id);
+//         productService.deleteProduct(id);
+//         return ResponseEntity.ok(
+//                 ApiResponse.success("Product deleted successfully", null));
+//     }
 
     @GetMapping("/category/{category}")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getByCategory(
